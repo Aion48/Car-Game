@@ -1,28 +1,28 @@
 
-var ratio;
+
+var drawphase = true;
 var shapepoints = [];
+var originpX;
+var originpY;
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  ratio = windowWidth / windowHeight;
 }
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  ratio = windowWidth / windowHeight;
 }
 
 function draw() {
   background(220);
 
-  //Driver
-  var d_side = width / 25;
-  //rect((width/2) - (d_side/2),(height/2) - (d_side/2),( d_side),(d_side));
+
+
   strokeWeight(5)
   for(var i = 1; i < shapepoints.length; i++ ){
 
-    line(shapepoints[i-1][0],shapepoints[i-1][1],shapepoints[i][0],shapepoints[i][1])
+    line(shapepoints[i-1][0],shapepoints[i-1][1],shapepoints[i][0],shapepoints[i][1]);
   }
-  if(shapepoints.length >= 1){
+  if(shapepoints.length >= 1 && drawphase == true){
 
         line(shapepoints[shapepoints.length - 1][0],shapepoints[shapepoints.length - 1][1],mouseX,mouseY);
 
@@ -34,8 +34,9 @@ function draw() {
     circle( shapepoints[i][0],shapepoints[i][1],width / 100);
   }
 
+  if(drawphase == true){
     circle(mouseX,mouseY,width / 100);
-
+  }
 
   //line()
 
@@ -86,8 +87,27 @@ function mouseClicked() {
 
     }
   }
-  if(push == true){
-      shapepoints.push([mouseX,mouseY]);
+
+  if(shapepoints.length > 0){
+    if(Math.sqrt(Math.pow(mouseX - shapepoints[0][0],2) + Math.pow(mouseY - shapepoints[0][1],2)) > 35){
+      if(push == true){
+        if(drawphase == true){
+          shapepoints.push([mouseX,mouseY]);
+        }
+      }
+    }else{
+        shapepoints.push([originpX,originpY]);
+        drawphase = false;
+
+    }
+  }else{
+    if(push == true){
+      if(drawphase == true){
+        shapepoints.push([mouseX,mouseY]);
+        originpX = mouseX;
+        originpY = mouseY;
+      }
+    }
   }
 }
 
